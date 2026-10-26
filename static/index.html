@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ensign AppFix | DevOps Improvement Backlog</title>
+  <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <!-- Vercel Speed Insights -->
+  <script>
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-group">
+        <div class="brand-badge">/appfix</div>
+        <div>
+          <h1 class="brand-title">Ensign App Improvements</h1>
+          <p class="brand-subtitle">DevOps Backlog & Agile Tracker · Team Lead: <a href="https://github.com/Rodrigomoll" target="_blank" rel="noopener"><strong>Rodrigo Moll (@Rodrigomoll)</strong></a></p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a href="https://github.com/robbagley-afk" target="_blank" rel="noopener" class="btn btn-outline">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub Repos
+        </a>
+        <button id="refresh-btn" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+          Refresh Live
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-container">
+    <!-- Filter & Summary Bar -->
+    <section class="toolbar">
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <span class="metric-label">Total Requests</span>
+          <span class="metric-value" id="count-total">0</span>
+        </div>
+        <div class="metric-card metric-critical">
+          <span class="metric-label">Critical (P0)</span>
+          <span class="metric-value" id="count-critical">0</span>
+        </div>
+        <div class="metric-card metric-high">
+          <span class="metric-label">High (P1)</span>
+          <span class="metric-value" id="count-high">0</span>
+        </div>
+        <div class="metric-card metric-medium">
+          <span class="metric-label">Medium (P2)</span>
+          <span class="metric-value" id="count-medium">0</span>
+        </div>
+        <div class="metric-card metric-done">
+          <span class="metric-label">Completed</span>
+          <span class="metric-value" id="count-done">0</span>
+        </div>
+      </div>
+
+      <div class="controls-bar">
+        <div class="search-box">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="text" id="search-input" placeholder="Search fixes, apps, or issue #...">
+        </div>
+        <div class="filter-group">
+          <label for="filter-app" class="filter-label">App:</label>
+          <select id="filter-app">
+            <option value="all">All Applications</option>
+            <option value="ENS 101 Guide">ENS 101 Guide</option>
+            <option value="Student Readiness Hub">Student Readiness Hub</option>
+            <option value="Career Fair Coach">Career Fair Coach</option>
+            <option value="Career Explorer">Career Explorer</option>
+            <option value="Local Agent Suite">Local Agent Suite</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-urgency" class="filter-label">Urgency:</label>
+          <select id="filter-urgency">
+            <option value="all">All Urgencies</option>
+            <option value="critical">Critical (P0)</option>
+            <option value="high">High (P1)</option>
+            <option value="medium">Medium (P2)</option>
+            <option value="low">Low (P3)</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Kanban Board -->
+    <section class="kanban-board">
+      <!-- Backlog Column -->
+      <div class="kanban-column" id="col-backlog">
+        <div class="column-header">
+          <div class="column-title-wrap">
+            <span class="column-indicator indicator-backlog"></span>
+            <h2 class="column-title">Backlog / Triaged</h2>
+          </div>
+          <span class="column-count" id="count-col-backlog">0</span>
+        </div>
+        <div class="cards-container" id="cards-backlog">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- In Progress Column -->
+      <div class="kanban-column" id="col-progress">
+        <div class="column-header">
+          <div class="column-title-wrap">
+            <span class="column-indicator indicator-progress"></span>
+            <h2 class="column-title">DevOps In Progress</h2>
+          </div>
+          <span class="column-count" id="count-col-progress">0</span>
+        </div>
+        <div class="cards-container" id="cards-progress">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Testing & Verification Column -->
+      <div class="kanban-column" id="col-testing">
+        <div class="column-header">
+          <div class="column-title-wrap">
+            <span class="column-indicator indicator-testing"></span>
+            <h2 class="column-title">Review & Testing</h2>
+          </div>
+          <span class="column-count" id="count-col-testing">0</span>
+        </div>
+        <div class="cards-container" id="cards-testing">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Completed Column -->
+      <div class="kanban-column" id="col-done">
+        <div class="column-header">
+          <div class="column-title-wrap">
+            <span class="column-indicator indicator-done"></span>
+            <h2 class="column-title">Live in Production</h2>
+          </div>
+          <span class="column-count" id="count-col-done">0</span>
+        </div>
+        <div class="cards-container" id="cards-done">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p>Ensign College Career Services · Continuous DevOps & Agile Improvement Pipeline</p>
+      <p>Submit changes via <code>/appfix &lt;description&gt;</code> in Claude, Antigravity, or Codex</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
