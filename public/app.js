@@ -12,6 +12,9 @@ const REPOSITORIES = [
   { name: 'Local Agent Suite', repo: 'robbagley-afk/ai-agents-local-llm' }
 ];
 
+// One week in milliseconds (7 days)
+const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+
 // Fallback / Initial Seed Dataset
 const SEED_ISSUES = [
   {
@@ -27,6 +30,7 @@ const SEED_ISSUES = [
     assignee: 'Rodrigomoll',
     assigneeAvatar: 'https://github.com/Rodrigomoll.png',
     createdAt: '2026-10-26T20:41:37Z',
+    completedAt: null,
     labels: ['appfix', 'urgency:high', 'enhancement']
   },
   {
@@ -42,6 +46,7 @@ const SEED_ISSUES = [
     assignee: 'Rodrigomoll',
     assigneeAvatar: 'https://github.com/Rodrigomoll.png',
     createdAt: '2026-10-26T12:00:00Z',
+    completedAt: '2026-10-26T14:00:00Z',
     labels: ['appfix', 'urgency:medium']
   },
   {
@@ -57,7 +62,24 @@ const SEED_ISSUES = [
     assignee: 'Rodrigomoll',
     assigneeAvatar: 'https://github.com/Rodrigomoll.png',
     createdAt: '2026-10-26T15:30:00Z',
+    completedAt: '2026-10-26T16:00:00Z',
     labels: ['appfix', 'urgency:high']
+  },
+  {
+    id: 'archived-sample-old',
+    repo: 'robbagley-afk/ENS-101-Guide',
+    app: 'ENS 101 Guide',
+    number: 14,
+    title: 'Initial Two-Screen Viewport Refactor',
+    description: 'Historical closed task older than 1 week (auto-falls off board).',
+    url: 'https://github.com/robbagley-afk/ENS-101-Guide',
+    urgency: 'low',
+    status: 'done',
+    assignee: 'Rodrigomoll',
+    assigneeAvatar: 'https://github.com/Rodrigomoll.png',
+    createdAt: '2026-10-01T10:00:00Z',
+    completedAt: '2026-10-10T10:00:00Z', // Completed 16 days ago -> falls off
+    labels: ['appfix', 'urgency:low']
   }
 ];
 
@@ -66,6 +88,7 @@ let state = {
   filterApp: 'all',
   filterUrgency: 'all',
   searchQuery: '',
+  showAllDone: false, // Default: false (falls off board after 1 week)
   loading: false
 };
 
@@ -145,6 +168,7 @@ async function fetchLiveIssues() {
             assignee: item.assignees?.[0]?.login || item.assignee?.login || 'Rodrigomoll',
             assigneeAvatar: item.assignees?.[0]?.avatar_url || 'https://github.com/Rodrigomoll.png',
             createdAt: item.created_at,
+            completedAt: item.closed_at || (item.state === 'closed' ? item.updated_at : null),
             labels: item.labels.map(l => l.name)
           }));
       } catch (err) {
@@ -157,7 +181,6 @@ async function fetchLiveIssues() {
     const liveIssues = results.flat();
 
     if (liveIssues.length > 0) {
-      // Merge with seed issues, prefer live
       const existingMap = new Map();
       liveIssues.forEach(iss => existingMap.set(iss.id, iss));
       SEED_ISSUES.forEach(iss => {
@@ -177,7 +200,19 @@ async function fetchLiveIssues() {
 
 // Render cards and metrics
 function render() {
+  const now = Date.now();
+
   const filtered = state.issues.filter(issue => {
+    // 7-day rule for completed cards:
+    // If completed and more than 7 days old, fall off the active board unless explicitly showing archive
+    if (issue.status === 'done' && !state.showAllDone) {
+      const completedTime = issue.completedAt ? new Date(issue.completedAt).getTime() : new Date(issue.createdAt).getTime();
+      const ageMs = now - completedTime;
+      if (ageMs > ONE_WEEK_MS) {
+        return false; // Auto-prune / fall off the board after 1 week
+      }
+    }
+
     // App filter
     if (state.filterApp !== 'all' && issue.app !== state.filterApp) return false;
     // Urgency filter
@@ -236,10 +271,13 @@ function renderColumn(container, items) {
     card.className = 'task-card';
 
     const urgencyClass = `badge-urgency-${item.urgency}`;
-    const dateFormatted = new Date(item.createdAt).toLocaleDateString(undefined, {
+    const dateFormatted = new Date(item.completedAt || item.createdAt).toLocaleDateString(undefined, {
       month: 'short',
       day: 'numeric'
     });
+
+    const isDone = item.status === 'done';
+    const dateLabel = isDone ? `Completed ${dateFormatted}` : `Opened ${dateFormatted}`;
 
     card.innerHTML = `
       <div class="card-top">
@@ -257,10 +295,13 @@ function renderColumn(container, items) {
           <img src="${item.assigneeAvatar}" alt="${item.assignee}" class="avatar">
           <span>@${escapeHTML(item.assignee)}</span>
         </div>
-        <a href="${item.url}" target="_blank" rel="noopener" class="card-meta-link">
-          <span>GitHub</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
-        </a>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="font-size: 0.7rem; color: #94A3B8;">${dateLabel}</span>
+          <a href="${item.url}" target="_blank" rel="noopener" class="card-meta-link">
+            <span>GitHub</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+          </a>
+        </div>
       </div>
     `;
     container.appendChild(card);
