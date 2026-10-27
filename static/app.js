@@ -18,7 +18,7 @@ const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 // Fallback / Initial Seed Dataset
 const SEED_ISSUES = [
   {
-    id: 'ens101-28',
+    id: 'robbagley-afk/ENS-101-Guide-28',
     repo: 'robbagley-afk/ENS-101-Guide',
     app: 'ENS 101 Guide',
     number: 28,
@@ -182,9 +182,14 @@ async function fetchLiveIssues() {
 
     if (liveIssues.length > 0) {
       const existingMap = new Map();
-      liveIssues.forEach(iss => existingMap.set(iss.id, iss));
+      // Deduplicate by repo + issue number so live GitHub issues seamlessly update/override fallback seeds
+      liveIssues.forEach(iss => {
+        const dedupeKey = `${iss.repo}#${iss.number}`;
+        existingMap.set(dedupeKey, iss);
+      });
       SEED_ISSUES.forEach(iss => {
-        if (!existingMap.has(iss.id)) existingMap.set(iss.id, iss);
+        const dedupeKey = `${iss.repo}#${iss.number}`;
+        if (!existingMap.has(dedupeKey)) existingMap.set(dedupeKey, iss);
       });
       state.issues = Array.from(existingMap.values());
     }
