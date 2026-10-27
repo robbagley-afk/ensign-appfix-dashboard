@@ -135,13 +135,27 @@ function extractStatus(issue) {
   return 'backlog';
 }
 
-// Fetch live issues from GitHub public API
+// Fetch live issues from /api/appfixes or GitHub public API
 async function fetchLiveIssues() {
   state.loading = true;
   refreshBtn.disabled = true;
   refreshBtn.style.opacity = '0.7';
 
   try {
+    // 1. Try local / serverless REST API first
+    try {
+      const apiRes = await fetch('/api/appfixes');
+      if (apiRes.ok) {
+        const apiData = await apiRes.json();
+        if (Array.isArray(apiData) && apiData.length > 0) {
+          state.issues = apiData;
+          renderBoard();
+          return;
+        }
+      }
+    } catch (_) {}
+
+    // 2. Fallback to GitHub public API
     const fetchPromises = REPOSITORIES.map(async ({ name, repo }) => {
       try {
         const res = await fetch(`https://api.github.com/repos/${repo}/issues?state=all&per_page=50`, {

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "robbagley-afk/ENS-101-Guide-28",
+    "repo": "robbagley-afk/ENS-101-Guide",
+    "app": "ENS 101 Guide",
+    "number": 28,
+    "title": "Next Step button: Amazon orange and completion glow",
+    "description": "Update the Next Step button to Amazon orange (#FF9900) and have it light up when all tasks/checklists on each page of the ENS 101 app are completed.",
+    "url": "https://github.com/robbagley-afk/ENS-101-Guide/issues/28",
+    "urgency": "high",
+    "status": "backlog",
+    "assignee": "Rodrigomoll",
+    "assigneeAvatar": "https://github.com/Rodrigomoll.png",
+    "createdAt": "2026-10-26T20:41:37Z",
+    "completedAt": null,
+    "labels": ["appfix", "urgency:high", "enhancement"]
+  },
+  {
+    "id": "srh-mock-1",
+    "repo": "robbagley-afk/ensign-student-readiness-hub",
+    "app": "Student Readiness Hub",
+    "number": 27,
+    "title": "VMock Full Module Ingestion: LinkedIn, Aspire, Resume Opt, Pitch",
+    "description": "Expanded student readiness scoring to ingest all 6 VMock reporting modules from 9.7MB production export.",
+    "url": "https://github.com/robbagley-afk/ensign-student-readiness-hub/pull/27",
+    "urgency": "medium",
+    "status": "done",
+    "assignee": "Rodrigomoll",
+    "assigneeAvatar": "https://github.com/Rodrigomoll.png",
+    "createdAt": "2026-10-26T12:00:00Z",
+    "completedAt": "2026-10-26T14:00:00Z",
+    "labels": ["appfix", "urgency:medium"]
+  },
+  {
+    "id": "suite-mock-2",
+    "repo": "robbagley-afk/ai-agents-local-llm",
+    "app": "Local Agent Suite",
+    "number": 23,
+    "title": "Gemini Cloud Fallback Removal from Local AI Suite",
+    "description": "Decommission external Gemini cloud fallback across portfolio endpoints; route strictly to local LM Studio resident models.",
+    "url": "https://github.com/robbagley-afk/ai-agents-local-llm/pull/23",
+    "urgency": "high",
+    "status": "done",
+    "assignee": "Rodrigomoll",
+    "assigneeAvatar": "https://github.com/Rodrigomoll.png",
+    "createdAt": "2026-10-26T15:30:00Z",
+    "completedAt": "2026-10-26T16:00:00Z",
+    "labels": ["appfix", "urgency:high"]
+  }
+]
