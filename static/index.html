@@ -165,6 +165,34 @@
     </section>
   </main>
 
+  
+  <!-- Prompt to Start Fix Modal -->
+  <div id="prompt-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card modal-card-prompt">
+      <div class="modal-header">
+        <div>
+          <h3 id="prompt-modal-title">🚀 Prompt to Start Fix</h3>
+          <p id="prompt-modal-subtitle" class="modal-subtitle">Ready-to-run prompt document from OneDrive PROMPTS to Start Projects</p>
+        </div>
+        <button id="prompt-modal-close" class="btn-close">&times;</button>
+      </div>
+      <div class="prompt-modal-body">
+        <div class="prompt-actions-bar">
+          <button type="button" id="prompt-copy-btn" class="btn btn-primary btn-copy-prompt">
+            📋 Copy Prompt to Clipboard
+          </button>
+          <a id="prompt-doc-link" href="#" target="_blank" rel="noopener" class="btn btn-outline btn-open-doc">
+            📄 Open Raw Document ↗
+          </a>
+          <span id="prompt-copy-feedback" class="copy-feedback-pill" style="display: none;">✅ Copied to clipboard! Ready to paste into Claude, Codex, or Antigravity</span>
+        </div>
+        <div class="prompt-code-container">
+          <pre id="prompt-content-pre" class="prompt-pre"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <footer class="app-footer">
     <div class="footer-container">
       <p>Ensign College Career Services · Continuous DevOps & Agile Improvement Pipeline</p>

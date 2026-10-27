@@ -255,6 +255,70 @@ function render() {
   renderColumn(cardsDone, cols.done);
 }
 
+
+// Prompt Runner Modal Elements
+const promptModal = document.getElementById('prompt-modal');
+const promptModalClose = document.getElementById('prompt-modal-close');
+const promptModalTitle = document.getElementById('prompt-modal-title');
+const promptModalSubtitle = document.getElementById('prompt-modal-subtitle');
+const promptDocLink = document.getElementById('prompt-doc-link');
+const promptCopyBtn = document.getElementById('prompt-copy-btn');
+const promptContentPre = document.getElementById('prompt-content-pre');
+const promptCopyFeedback = document.getElementById('prompt-copy-feedback');
+
+let currentActivePromptText = '';
+
+window.openAppfixPromptModal = async function(id) {
+  const item = state.issues.find(iss => iss.id === id);
+  if (!item) return;
+
+  const docFile = item.number === 28 ? 'ens101-issue-28.md' : 'appfix-dispatch.md';
+  const docUrl = `prompts/${docFile}`;
+
+  promptModalTitle.textContent = `🚀 Prompt to Run: #${item.number} ${item.title}`;
+  promptModalSubtitle.textContent = `App: ${item.app} · Assigned to: @${item.assignee} · OneDrive > AI PROJECTS > PROMPTS to Start Projects/${docFile}`;
+  promptDocLink.href = docUrl;
+
+  promptContentPre.textContent = 'Loading prompt document...';
+  promptCopyFeedback.style.display = 'none';
+  promptModal.style.display = 'flex';
+
+  try {
+    const res = await fetch(docUrl);
+    if (res.ok) {
+      const text = await res.text();
+      currentActivePromptText = text;
+      promptContentPre.textContent = text;
+    } else {
+      currentActivePromptText = `# Start Prompt: Fix #${item.number} on ${item.app}\n\nRole: DevOps Coding Engineer / Lead (@${item.assignee})\nRepository: ${item.repo}\nIssue URL: ${item.url}\n\nTask:\n${item.description}\n\n1. Check out branch for issue #${item.number}.\n2. Implement fix matching Ensign design system.\n3. Test locally and submit PR closing #${item.number}.`;
+      promptContentPre.textContent = currentActivePromptText;
+    }
+  } catch (err) {
+    currentActivePromptText = `# Start Prompt: #${item.number} ${item.title}\n\nRepository: ${item.repo}\nTask: ${item.description}`;
+    promptContentPre.textContent = currentActivePromptText;
+  }
+};
+
+function closePromptModal() {
+  if (promptModal) promptModal.style.display = 'none';
+}
+
+if (promptModalClose) promptModalClose.addEventListener('click', closePromptModal);
+
+if (promptCopyBtn) {
+  promptCopyBtn.addEventListener('click', () => {
+    if (!currentActivePromptText) return;
+    navigator.clipboard.writeText(currentActivePromptText).then(() => {
+      promptCopyFeedback.style.display = 'inline-block';
+      setTimeout(() => {
+        promptCopyFeedback.style.display = 'none';
+      }, 3500);
+    }).catch(err => {
+      console.error('Clipboard copy failed:', err);
+    });
+  });
+}
+
 function renderColumn(container, items) {
   container.innerHTML = '';
   if (items.length === 0) {
@@ -296,6 +360,9 @@ function renderColumn(container, items) {
           <span>@${escapeHTML(item.assignee)}</span>
         </div>
         <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <button class="btn-start-prompt" onclick="event.stopPropagation(); openAppfixPromptModal('${item.id}')" title="Run start prompt for this issue">
+            🚀 Run Prompt
+          </button>
           <span style="font-size: 0.7rem; color: #94A3B8;">${dateLabel}</span>
           <a href="${item.url}" target="_blank" rel="noopener" class="card-meta-link">
             <span>GitHub</span>
