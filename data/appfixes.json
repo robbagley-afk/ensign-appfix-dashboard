@@ -1,5 +1,24 @@
 [
   {
+    "id": "appfix-1793200722689",
+    "repo": "robbagley-afk/ensign-appfix-dashboard",
+    "app": "DevOps & System Admin Workflows",
+    "number": 104,
+    "title": "Standardize System Admin notification email to cissystemadmin@ensign.edu",
+    "description": "Ensure that any processes, scripts, LaunchAgents, or automations set up to send email to the System Admin use cissystemadmin@ensign.edu. Rob is deleting the duplicate cis_systemadmin@ensign.edu M365 Group Email. Context in Mem note: https://mem.ai/notes/36ba13d3-231c-5eca-a69d-adada3b22fe1",
+    "url": "https://mem.ai/notes/36ba13d3-231c-5eca-a69d-adada3b22fe1",
+    "urgency": "high",
+    "status": "backlog",
+    "assignee": "Rodrigomoll",
+    "assigneeAvatar": "https://github.com/Rodrigomoll.png",
+    "createdAt": "2026-10-28T15:18:42.689Z",
+    "completedAt": null,
+    "labels": [
+      "appfix",
+      "urgency:high"
+    ]
+  },
+  {
     "id": "robbagley-afk/ENS-101-Guide-28",
     "repo": "robbagley-afk/ENS-101-Guide",
     "app": "ENS 101 Guide",
@@ -13,7 +32,11 @@
     "assigneeAvatar": "https://github.com/Rodrigomoll.png",
     "createdAt": "2026-10-26T20:41:37Z",
     "completedAt": null,
-    "labels": ["appfix", "urgency:high", "enhancement"]
+    "labels": [
+      "appfix",
+      "urgency:high",
+      "enhancement"
+    ]
   },
   {
     "id": "srh-mock-1",
@@ -29,7 +52,10 @@
     "assigneeAvatar": "https://github.com/Rodrigomoll.png",
     "createdAt": "2026-10-26T12:00:00Z",
     "completedAt": "2026-10-26T14:00:00Z",
-    "labels": ["appfix", "urgency:medium"]
+    "labels": [
+      "appfix",
+      "urgency:medium"
+    ]
   },
   {
     "id": "suite-mock-2",
@@ -45,6 +71,9 @@
     "assigneeAvatar": "https://github.com/Rodrigomoll.png",
     "createdAt": "2026-10-26T15:30:00Z",
     "completedAt": "2026-10-26T16:00:00Z",
-    "labels": ["appfix", "urgency:high"]
+    "labels": [
+      "appfix",
+      "urgency:high"
+    ]
   }
 ]
