@@ -20,15 +20,19 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#EA580C">
+  <meta name="theme-color" content="#00382A">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="ecc-tokens.css">
+<link rel="stylesheet" href="ecc-ces-compat.css">
+<link rel="stylesheet" href="ecc-components.base.css">
+<link rel="stylesheet" href="ecc-app.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="app-header">
+  <header class="app-header ecc-hdr-band">
     <div class="header-container">
       <div class="brand-group">
         <div class="brand-badge">/appfix</div>
@@ -38,11 +42,11 @@
         </div>
       </div>
       <div class="header-actions">
-        <a href="https://github.com/robbagley-afk" target="_blank" rel="noopener" class="btn btn-outline">
+        <a href="https://github.com/robbagley-afk" target="_blank" rel="noopener" class="ecc-btn ecc-btn--lg ecc-btn-secondary btn btn-outline">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
           GitHub Repos
         </a>
-        <button id="refresh-btn" class="btn btn-primary">
+        <button id="refresh-btn" class="ecc-btn ecc-btn--lg ecc-btn-primary btn btn-primary">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
           Refresh Live
         </button>
@@ -79,22 +83,25 @@
       <div class="controls-bar">
         <div class="search-box">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-          <input type="text" id="search-input" placeholder="Search fixes, apps, or issue #...">
+          <input type="text" id="search-input" class="ecc-field ecc-field--lg" aria-label="Search requests" placeholder="Search requests">
         </div>
         <div class="filter-group">
           <label for="filter-app" class="filter-label">App:</label>
-          <select id="filter-app">
+          <select class="ecc-field ecc-field--lg" id="filter-app">
             <option value="all">All Applications</option>
             <option value="ENS 101 Guide">ENS 101 Guide</option>
             <option value="Student Readiness Hub">Student Readiness Hub</option>
             <option value="Career Fair Coach">Career Fair Coach</option>
             <option value="Career Explorer">Career Explorer</option>
             <option value="Local Agent Suite">Local Agent Suite</option>
+<option value="Mentor Explorer">Mentor Explorer</option>
+<option value="Design System">Design System</option>
+<option value="AppFix Dashboard">AppFix Dashboard</option>
           </select>
         </div>
         <div class="filter-group">
           <label for="filter-urgency" class="filter-label">Urgency:</label>
-          <select id="filter-urgency">
+          <select class="ecc-field ecc-field--lg" id="filter-urgency">
             <option value="all">All Urgencies</option>
             <option value="critical">Critical (P0)</option>
             <option value="high">High (P1)</option>
@@ -106,7 +113,8 @@
     </section>
 
     <!-- Kanban Board -->
-    <section class="kanban-board">
+    <p id="sync-status" role="status">Loading requests…</p>
+    <section class="kanban-board" aria-label="App improvement requests">
       <!-- Backlog Column -->
       <div class="kanban-column" id="col-backlog">
         <div class="column-header">
@@ -154,7 +162,7 @@
         <div class="column-header">
           <div class="column-title-wrap">
             <span class="column-indicator indicator-done"></span>
-            <h2 class="column-title">Live in Production <span style="font-size: 0.72rem; color: #64748B; font-weight: 500;">(Past 7 Days)</span></h2>
+            <h2 class="column-title">Closed requests <span class="completed-window">(Past 7 Days)</span></h2>
           </div>
           <span class="column-count" id="count-col-done">0</span>
         </div>
@@ -167,24 +175,24 @@
 
   
   <!-- Prompt to Start Fix Modal -->
-  <div id="prompt-modal" class="modal-overlay" style="display: none;">
+  <div id="prompt-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="prompt-modal-title" style="display: none;">
     <div class="modal-card modal-card-prompt">
       <div class="modal-header">
         <div>
-          <h3 id="prompt-modal-title">🚀 Prompt to Start Fix</h3>
-          <p id="prompt-modal-subtitle" class="modal-subtitle">Ready-to-run prompt document from OneDrive PROMPTS to Start Projects</p>
+          <h3 id="prompt-modal-title">Prompt to Start Fix</h3>
+          <p id="prompt-modal-subtitle" class="modal-subtitle">Review and copy the start prompt for this request.</p>
         </div>
-        <button id="prompt-modal-close" class="btn-close">&times;</button>
+        <button id="prompt-modal-close" class="btn-close" aria-label="Close prompt">&times;</button>
       </div>
       <div class="prompt-modal-body">
         <div class="prompt-actions-bar">
-          <button type="button" id="prompt-copy-btn" class="btn btn-primary btn-copy-prompt">
-            📋 Copy Prompt to Clipboard
+          <button type="button" id="prompt-copy-btn" class="ecc-btn ecc-btn--lg ecc-btn-primary btn btn-primary btn-copy-prompt">
+            Copy Prompt to Clipboard
           </button>
-          <a id="prompt-doc-link" href="#" target="_blank" rel="noopener" class="btn btn-outline btn-open-doc">
-            📄 Open Raw Document ↗
+          <a id="prompt-doc-link" href="#" target="_blank" rel="noopener" class="ecc-btn ecc-btn--lg ecc-btn-secondary btn btn-outline btn-open-doc">
+            Open Raw Document ↗
           </a>
-          <span id="prompt-copy-feedback" class="copy-feedback-pill" style="display: none;">✅ Copied to clipboard! Ready to paste into Claude, Codex, or Antigravity</span>
+          <span id="prompt-copy-feedback" class="copy-feedback-pill" style="display: none;">Copied to clipboard! Ready to paste into Claude, Codex, or Antigravity</span>
         </div>
         <div class="prompt-code-container">
           <pre id="prompt-content-pre" class="prompt-pre"></pre>
