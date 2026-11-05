@@ -1,0 +1,19 @@
+name: ECC audit
+on: [pull_request, push]
+permissions:
+  contents: read
+jobs:
+  ecc-audit:
+    uses: robbagley-afk/ensign-design-system/.github/workflows/ecc-audit-reusable.yml@ad39d14638afe6a707ef7c7b4a3af6e2becee060
+    with:
+      audit-path: .
+      design-system-ref: ad39d14638afe6a707ef7c7b4a3af6e2becee060
+  dispatch-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dispatcher and dashboard contracts
+        run: |
+          python3 tests/test_dispatcher.py
+          node tests/test_dashboard.cjs
+          node --check app.js
